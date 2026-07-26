@@ -1,13 +1,161 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
+port = int(os.environ.get("PORT", "3000"))
 
 
 @app.get("/")
 def hello():
-    return "Hello, Flask!"
+    return render_template_string(
+        """<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f7f5">
+    <title>Flask / Python</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-synthesis: none;
+        color: #171717;
+        background: #f7f7f5;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        min-height: 100dvh;
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        width: min(100% - 2.5rem, 64rem);
+        min-height: 100dvh;
+        margin: 0 auto;
+        padding: 2rem 0;
+      }
+
+      .hero {
+        display: grid;
+        flex: 1;
+        grid-template-columns: minmax(0, 1.35fr) minmax(18rem, .65fr);
+        align-items: center;
+        gap: clamp(3rem, 8vw, 7rem);
+        padding: clamp(5rem, 14vh, 9rem) 0;
+      }
+
+      .panel-label {
+        margin: 0;
+        color: #737373;
+        font-size: .7rem;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 12ch;
+        margin: 1.25rem 0 1.5rem;
+        font-size: clamp(3.5rem, 9vw, 7rem);
+        font-weight: 500;
+        letter-spacing: -.075em;
+        line-height: .9;
+      }
+
+      h1 span { color: #0f766e; }
+
+      .intro {
+        max-width: 36rem;
+        margin: 0;
+        color: #525252;
+        font-size: clamp(.85rem, 1.5vw, 1rem);
+        line-height: 1.8;
+      }
+
+      .panel { border-top: 1px solid #171717; }
+
+      .panel-label { padding: 1rem 0; }
+
+      dl { margin: 0; }
+
+      .row {
+        display: grid;
+        grid-template-columns: 5rem 1fr;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-top: 1px solid #d4d4d4;
+        font-size: .75rem;
+        line-height: 1.5;
+      }
+
+      dt {
+        color: #a3a3a3;
+        text-transform: uppercase;
+      }
+
+      dd {
+        margin: 0;
+        text-align: right;
+      }
+
+      code {
+        padding: .18rem .35rem;
+        color: #0f766e;
+        background: #ccfbf1;
+      }
+
+      @media (max-width: 700px) {
+        main {
+          width: min(100% - 2rem, 64rem);
+          padding: 1.25rem 0;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          align-content: center;
+          gap: 4rem;
+          padding: 5rem 0;
+        }
+
+        h1 { font-size: clamp(3.5rem, 20vw, 5.5rem); }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Hello,<br><span>Flask.</span></h1>
+          <p class="intro">The app is running and ready for a route. Start building in <code>app.py</code>.</p>
+        </div>
+
+        <aside class="panel" aria-label="Request details">
+          <p class="panel-label">Current request</p>
+          <dl>
+            <div class="row"><dt>Method</dt><dd>{{ method }}</dd></div>
+            <div class="row"><dt>Route</dt><dd>{{ path }}</dd></div>
+            <div class="row"><dt>Runtime</dt><dd>Python</dd></div>
+            <div class="row"><dt>Port</dt><dd>{{ port }}</dd></div>
+          </dl>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>""",
+        method=request.method,
+        path=request.path,
+        port=port,
+    )
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "3000")))
+    app.run(host="0.0.0.0", port=port)
